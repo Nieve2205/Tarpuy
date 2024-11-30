@@ -4,7 +4,6 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("kotlin-kapt")
     id("com.google.gms.google-services")
-    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -14,7 +13,6 @@ android {
     defaultConfig {
         applicationId = "com.example.proyectofinaltarpuy"
         minSdk = 24
-        //noinspection OldTargetApi
         targetSdk = 35
         versionCode = 1
         versionName = "1.0"
@@ -47,11 +45,21 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.3" // O la última versión estable
     }
+
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    kapt {
+        arguments {
+            arg("kapt.kotlin.generated", "$buildDir/generated/source/kaptKotlin/debug")
+            arg("kapt.incremental.apt", "true")
+            arg("kapt.use.worker.api", "true")
+            arg("-Xlint:deprecation")
+        }
+    }
+
 }
 
 dependencies {
@@ -76,22 +84,21 @@ dependencies {
     // Firebase
     implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
     implementation("com.google.firebase:firebase-analytics")
+
     implementation(libs.firebase.firestore.ktx)
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.database.ktx)
-    
+
     // Jetpack Navigation
     implementation(libs.androidx.navigation.compose)
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
     // Hilt para DI
     implementation("com.google.dagger:hilt-android:2.49")
-
-
     kapt("com.google.dagger:hilt-compiler:2.49")
 
     // Coil para imágenes
-    implementation("io.coil-kt:coil-compose:2.0.0")
+    implementation("io.coil-kt:coil-compose:2.4.0")
 
     // Testing
     testImplementation(libs.junit)
@@ -104,5 +111,9 @@ dependencies {
 
     // Mapas (opcional si no estás usando mapas en este proyecto)
     implementation("com.google.maps.android:maps-compose:2.11.2")
+    implementation ("com.google.android.gms:play-services-base:18.5.0")
+    implementation ("com.google.android.gms:play-services-auth:21.2.0")
     implementation(libs.play.services.maps)
+    implementation ("com.google.android.gms:play-services-location:21.3.0")
+
 }
